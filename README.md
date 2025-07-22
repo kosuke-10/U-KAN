@@ -1,40 +1,40 @@
-# U-KAN Makes Strong Backbone for Medical Image Segmentation and Generation
+# U-KAN: 医用画像セグメンテーションと生成のための強力なバックボーン
 
-:pushpin: This is an official PyTorch implementation of **U-KAN Makes Strong Backbone for Medical Image Segmentation and Generation**
+:pushpin: これは **U-KAN: 医用画像セグメンテーションと生成のための強力なバックボーン** の公式 PyTorch 実装です。
 
-[[`Project Page`](https://yes-u-kan.github.io/)] [[`arXiv`](https://arxiv.org/abs/2406.02918)] [[`BibTeX`](#citation)]
+[[`プロジェクトページ`](https://yes-u-kan.github.io/)] [[`arXiv`](https://arxiv.org/abs/2406.02918)] [[`BibTeX`](#citation)]
 
 <p align="center">
   <img src="./assets/logo_1.png" alt="" width="120" height="120">
 </p>
 
-> [**U-KAN Makes Strong Backbone for Medical Image Segmentation and Generation**](https://arxiv.org/abs/2406.02918)<br>
-> [Chenxin Li](https://xggnet.github.io/)<sup>1\*</sup>, [Xinyu Liu](https://xinyuliu-jeffrey.github.io/)<sup>1\*</sup>, [Wuyang Li](https://wymancv.github.io/wuyang.github.io/)<sup>1\*</sup>, [Cheng Wang](https://scholar.google.com/citations?user=AM7gvyUAAAAJ&hl=en)<sup>1\*</sup>, [Hengyu Liu](https://liuhengyu321.github.io/)<sup>1</sup>, [Yifan Liu](https://yifliu3.github.io/)<sup>1</sup>, [Chen Zhen](https://franciszchen.github.io/)<sup>2</sup>, [Yixuan Yuan](https://www.ee.cuhk.edu.hk/~yxyuan/people/people.htm)<sup>1✉</sup><br> <sup>1</sup>The Chinese Univerisity of Hong Kong, <sup>2</sup>Centre for Artificial Intelligence and Robotics, Hong Kong
+> [**U-KAN: 医用画像セグメンテーションと生成のための強力なバックボーン**](https://arxiv.org/abs/2406.02918)<br>
+> [Chenxin Li](https://xggnet.github.io/)<sup>1\*</sup>, [Xinyu Liu](https://xinyuliu-jeffrey.github.io/)<sup>1\*</sup>, [Wuyang Li](https://wymancv.github.io/wuyang.github.io/)<sup>1\*</sup>, [Cheng Wang](https://scholar.google.com/citations?user=AM7gvyUAAAAJ&hl=en)<sup>1\*</sup>, [Hengyu Liu](https://liuhengyu321.github.io/)<sup>1</sup>, [Yifan Liu](https://yifliu3.github.io/)<sup>1</sup>, [Chen Zhen](https://franciszchen.github.io/)<sup>2</sup>, [Yixuan Yuan](https://www.ee.cuhk.edu.hk/~yxyuan/people/people.htm)<sup>1✉</sup><br> <sup>1</sup>香港中文大学, <sup>2</sup>香港人工知能・ロボティクスセンター
 
-We explore the untapped potential of Kolmogorov-Anold Network (aka. KAN) in improving backbones for vision tasks. We investigate, modify and re-design the established U-Net pipeline by integrating the dedicated KAN layers on the tokenized intermediate representation, termed U-KAN. Rigorous medical image segmentation benchmarks verify the superiority of U-KAN by higher accuracy even with less computation cost. We further delved into the potential of U-KAN as an alternative U-Net noise predictor in diffusion models, demonstrating its applicability in generating task-oriented model architectures. These endeavours unveil valuable insights and sheds light on the prospect that with U-KAN, you can make strong backbone for medical image segmentation and generation.
+私たちは Kolmogorov–Arnold Network（KAN）がビジョンタスクのバックボーンを改善する潜在能力を探求しました。既存の U-Net パイプラインを調査・改良・再設計し、トークン化された中間表現に専用の KAN レイヤーを組み込んだ **U-KAN** を考案しました。厳密な医用画像セグメンテーションのベンチマークにより、U-KAN は計算コストを抑えつつもより高い精度を示すことが確認されました。さらに、拡散モデルにおける U-Net のノイズ予測器の代替として U-KAN を利用し、生成タスク向けモデル構造のバックボーンとしての有効性も示しました。これらの取り組みにより、U-KAN によって医用画像セグメンテーションと生成のための強力なバックボーンを構築できるという新たな展望が得られました。
 
 <div align="center">
     <img width="100%" alt="UKAN overview" src="assets/framework-1.jpg"/>
 </div>
 
-## 📰News
+## 📰ニュース
 
- **[NOTE]** Random seed is essential for eval metric, and all reported results are calculated over three random runs with seeds of 2981, 6142, 1187, following rolling-UNet. We think most issues are related with this.
+**[注意]** ランダムシードは評価指標にとって重要であり、報告された結果は 2981, 6142, 1187 の3つのシードで3回実行した平均です（rolling-UNet に従う）。多くの問題はこれに関連していると考えられます。
 
-**[2024.10]** U-KAN is accepted by AAAI-25. 
+**[2024.10]** U-KAN は AAAI-25 に採択されました。
 
-**[2024.6]** Some modifications are done in Seg_UKAN for better performance reproduction. The previous code can be quickly updated by replacing the contents of train.py and archs.py with the new ones.
+**[2024.6]** Seg_UKAN にいくつかの修正を行い、再現性が向上しました。以前のコードは train.py と archs.py を差し替えるだけで更新可能です。
 
-**[2024.6]** Model checkpoints and training logs are released!
+**[2024.6]** モデルチェックポイントと学習ログを公開しました！
 
-**[2024.6]** Code and paper of U-KAN are released!
+**[2024.6]** コードと論文を公開しました！
 
-## 💡Key Features
-- The first effort to incorporate the advantage of emerging KAN to improve established U-Net pipeline to be more **accurate, efficient and interpretable**.
-- A Segmentation U-KAN with **tokenized KAN block to effectively steer the KAN operators** to be compatible with the exiting convolution-based designs.
-- A Diffusion U-KAN as an **improved noise predictor** demonstrates its potential in backboning generative tasks and broader vision settings.
+## 💡主な特徴
+- 新たな KAN を導入し、既存の U-Net パイプラインをより **高精度・高効率・高い解釈性** に改良。
+- Segmentation U-KAN は **トークン化された KAN ブロック** を用いて既存の畳み込み設計と互換性を確保。
+- Diffusion U-KAN は **改良されたノイズ予測器** として生成タスクや幅広いビジョン設定での可能性を実証。
 
-## 🛠Setup
+## 🛠セットアップ
 
 ```bash
 git clone https://github.com/CUHK-AIM-Group/U-KAN.git
@@ -44,22 +44,19 @@ conda activate ukan
 cd Seg_UKAN && pip install -r requirements.txt
 ```
 
-**Tips A**: We test the framework using pytorch=1.13.0, and the CUDA compile version=11.6. Other versions should be also fine but not totally ensured.
+**Tips A**: 本フレームワークは `pytorch=1.13.0` と `CUDA 11.6` でテストしています。他バージョンでも動作する可能性はありますが保証はしません。
+
+## 📚 データ準備
+
+- **BUSI**: [こちら](https://www.kaggle.com/datasets/aryashah2k/breast-ultrasound-images-dataset)
+- **GLAS**: [こちら](https://warwick.ac.uk/fac/cross_fac/tia/data/glascontest)
+- **CVC-ClinicDB**: [こちら](https://www.dropbox.com/s/p5qe9eotetjnbmq/CVC-ClinicDB.rar?e=3&dl=0)
+
+すべての [前処理済みデータセット](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/ErDlT-t0WoBNlKhBlbYfReYB-iviSCmkNRb1GqZ90oYjJA?e=hrPNWD) も提供しています。  
+ダウンロードして `data` ディレクトリに配置すればすぐ使えます。
 
 
-## 📚Data Preparation
-**BUSI**:  The dataset can be found [here](https://www.kaggle.com/datasets/aryashah2k/breast-ultrasound-images-dataset). 
-
-**GLAS**:  The dataset can be found [here](https://websignon.warwick.ac.uk/origin/slogin?shire=https%3A%2F%2Fwarwick.ac.uk%2Fsitebuilder2%2Fshire-read&providerId=urn%3Awarwick.ac.uk%3Asitebuilder2%3Aread%3Aservice&target=https%3A%2F%2Fwarwick.ac.uk%2Ffac%2Fcross_fac%2Ftia%2Fdata%2Fglascontest&status=notloggedin). 
-<!-- You can directly use the [processed GLAS data]() without further data processing. -->
-**CVC-ClinicDB**:  The dataset can be found [here](https://www.dropbox.com/s/p5qe9eotetjnbmq/CVC-ClinicDB.rar?e=3&dl=0). 
-<!-- You can directly use the [processed CVC-ClinicDB data]() without further data processing. -->
-
-We also provide all the [pre-processed dataset](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/ErDlT-t0WoBNlKhBlbYfReYB-iviSCmkNRb1GqZ90oYjJA?e=hrPNWD) without requiring any further data processing. You can directly download and put them into the data dir.
-
-
-
-The resulted file structure is as follows.
+ディレクトリ構造例:
 ```
 Seg_UKAN
 ├── inputs
@@ -89,71 +86,86 @@ Seg_UKAN
 |           ├── ...
 ```
 
-## 🔖Evaluating Segmentation U-KAN
 
-You can directly evaluate U-KAN from the checkpoint model. Here is an example for quick usage for using our **pre-trained models** in [Segmentation Model Zoo](#segmentation-model-zoo):
-1. Download the pre-trained weights and put them to ```{args.output_dir}/{args.name}/model.pth```
-2. Run the following scripts to 
+## 🔖 セグメンテーション U-KAN の評価
+
+事前学習済みモデルから直接 U-KAN を評価することができます。  
+以下は [セグメンテーションモデル動物園](#セグメンテーションモデル動物園) にある **事前学習済みモデル** を使用する簡単な例です。
+
+1. 事前学習済みの重みをダウンロードし、```{args.output_dir}/{args.name}/model.pth``` に配置してください。  
+2. 次のスクリプトを実行します。
+
 ```bash
 cd Seg_UKAN
-python val.py --name ${dataset}_UKAN --output_dir [YOUR_OUTPUT_DIR] 
+python val.py --name ${dataset}_UKAN --output_dir [YOUR_OUTPUT_DIR]
 ```
 
-## ⏳Training Segmentation U-KAN
+## ⏳ セグメンテーション U-KAN の学習
 
-You can simply train U-KAN on a single GPU by specifing the dataset name ```--dataset``` and input size ```--input_size```.
+単一の GPU で簡単に学習することができます。
+```--dataset```と  ```--input_size```.を指定してください。
+
 ```bash
 cd Seg_UKAN
-python train.py --arch UKAN --dataset {dataset} --input_w {input_size} --input_h {input_size} --name {dataset}_UKAN  --data_dir [YOUR_DATA_DIR]
+python train.py --arch UKAN --dataset {dataset} --input_w {input_size} --input_h {input_size} --name {dataset}_UKAN --data_dir [YOUR_DATA_DIR]
 ```
-For example, train U-KAN with the resolution of 256x256 with a single GPU on the BUSI dataset in the ```inputs``` dir:
+
+例: BUSI データセットを 256×256 の解像度で単一 GPU で学習する場合（inputs ディレクトリ内のデータを使用）:
+
 ```bash
 cd Seg_UKAN
-python train.py --arch UKAN --dataset busi --input_w 256 --input_h 256 --name busi_UKAN  --data_dir ./inputs
+python train.py --arch UKAN --dataset busi --input_w 256 --input_h 256 --name busi_UKAN --data_dir ./inputs
 ```
-Please see Seg_UKAN/scripts.sh for more details.
-Note that the resolution of glas is 512x512, differing with other datasets (256x256).
 
-**[Quick Update]** Please follow the seeds of 2981, 6142, 1187 to fully reproduce the paper experimental results. All compared methods are evaluated on the same seed setting.
+詳細については Seg_UKAN/scripts.sh を参照してください。
+なお、GLAS データセットは 512×512 の解像度で、他のデータセット（256×256）とは異なります。
 
-## 🎪Segmentation Model Zoo
-We provide all the pre-trained model [checkpoints](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/Ej6yZBSIrU5Ds9q-gQdhXqwBbpov5_MaWF483uZHm2lccA?e=rmlHMo)
-Here is an overview of the released performance&checkpoints. Note that results on a single run and the reported average results in the paper differ.
-|Method| Dataset | IoU | F1  | Checkpoints |
-|-----|------|-----|-----|-----|
-|Seg U-KAN| BUSI | 65.26 | 78.75 | [Link](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/EjktWkXytkZEgN3EzN2sJKIBfHCeEnJnCnazC68pWCy7kQ?e=4JBLIc)|
-|Seg U-KAN| GLAS | 87.51 | 93.33 | [Link](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/EunQ9KRf6n1AqCJ40FWZF-QB25GMOoF7hoIwU15fefqFbw?e=m7kXwe)|
-|Seg U-KAN| CVC-ClinicDB | 85.61 | 92.19 | [Link](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/Ekhb3PEmwZZMumSG69wPRRQBymYIi0PFNuLJcVNmmK1fjA?e=5XzVSi)|
+**[Quick Update]**
+論文中の実験結果を完全に再現するには、シード値 2981, 6142, 1187 を使用してください。
+比較したすべての手法は同じシード設定で評価されています。
 
-The parameter ``--no_kan'' denotes the baseline model that is replaced the KAN layers with MLP layers. Please note: it is reasonable to find occasional inconsistencies in performance, and the average results over multiple runs can reveal a more obvious trend.
-|Method| Layer Type | IoU | F1  | Checkpoints |
-|-----|------|-----|-----|-----|
-|Seg U-KAN (--no_kan)| MLP Layer  | 63.49 |	77.07 | [Link](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/EmEH_qokqIFNtP59yU7vY_4Bq4Yc424zuYufwaJuiAGKiw?e=IJ3clx)|
-|Seg U-KAN| KAN Layer |  65.26 | 78.75  | [Link](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/EjktWkXytkZEgN3EzN2sJKIBfHCeEnJnCnazC68pWCy7kQ?e=4JBLIc)|
+## 🎪 セグメンテーションモデル動物園
 
-## 🎇Medical Image Generation with Diffusion U-KAN
+すべての事前学習済みモデルの [チェックポイント](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/Ej6yZBSIrU5Ds9q-gQdhXqwBbpov5_MaWF483uZHm2lccA?e=rmlHMo) を提供しています。  
+以下は公開されている性能とチェックポイントの概要です。  
+単一実行の結果と、論文で報告された平均結果が異なる点にご注意ください。
 
-Please refer to [Diffusion_UKAN](./Diffusion_UKAN/README.md)
+| メソッド  | データセット | IoU   | F1    | チェックポイント                                                                                                                              |
+| --------- | ------------ | ----- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Seg U-KAN | BUSI         | 65.26 | 78.75 | [リンク](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/EjktWkXytkZEgN3EzN2sJKIBfHCeEnJnCnazC68pWCy7kQ?e=4JBLIc) |
+| Seg U-KAN | GLAS         | 87.51 | 93.33 | [リンク](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/EunQ9KRf6n1AqCJ40FWZF-QB25GMOoF7hoIwU15fefqFbw?e=m7kXwe) |
+| Seg U-KAN | CVC-ClinicDB | 85.61 | 92.19 | [リンク](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/Ekhb3PEmwZZMumSG69wPRRQBymYIi0PFNuLJcVNmmK1fjA?e=5XzVSi) |
 
+パラメータ `--no_kan` は、KAN レイヤーを MLP レイヤーに置き換えたベースラインモデルを意味します。  
+性能にばらつきが見られる場合もありますが、複数回実行した平均結果でより明確な傾向がわかります。
 
-## 🛒TODO List
-- [X] Release code for Seg U-KAN.
-- [X] Release code for Diffusion U-KAN.
-- [X] Upload the pretrained checkpoints.
+| メソッド             | レイヤータイプ | IoU   | F1    | チェックポイント                                                                                                                              |
+| -------------------- | -------------- | ----- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Seg U-KAN (--no_kan) | MLP Layer      | 63.49 | 77.07 | [リンク](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/EmEH_qokqIFNtP59yU7vY_4Bq4Yc424zuYufwaJuiAGKiw?e=IJ3clx) |
+| Seg U-KAN            | KAN Layer      | 65.26 | 78.75 | [リンク](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155206760_link_cuhk_edu_hk/EjktWkXytkZEgN3EzN2sJKIBfHCeEnJnCnazC68pWCy7kQ?e=4JBLIc) |
 
+## 🎇 Diffusion U-KAN による医用画像生成
 
-## 🎈Acknowledgements
-Greatly appreciate the tremendous effort for the following projects!
+詳しくは [Diffusion_UKAN](./Diffusion_UKAN/README.md) を参照してください。
+
+## 🛒 TODO リスト
+
+- [X] Seg U-KAN のコード公開  
+- [X] Diffusion U-KAN のコード公開  
+- [X] 事前学習済みチェックポイント公開
+
+## 🎈 謝辞
+
+以下のプロジェクトに深く感謝します。
+
 - [CKAN](https://github.com/AntonioTepsich/Convolutional-KANs)
 
+## 📜 引用
 
-## 📜Citation
-If you find this work helpful for your project,please consider citing the following paper:
-```
+```bibtex
 @article{li2024ukan,
   title={U-KAN Makes Strong Backbone for Medical Image Segmentation and Generation},
   author={Li, Chenxin and Liu, Xinyu and Li, Wuyang and Wang, Cheng and Liu, Hengyu and Yuan, Yixuan},
   journal={arXiv preprint arXiv:2406.02918},
   year={2024}
-'''
 }

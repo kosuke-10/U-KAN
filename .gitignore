@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# PyTorch model weights
+*.pth
+*.pt
+
+# Logs and debugging
+*.log
+*.out
+
+# System files
+.DS_Store
+Thumbs.db
+
+# VSCode settings (if any)
+.vscode/
+
+# nnUNet-generated folders (if manually created outside tracked folders)
+nnUNet_raw/
+nnUNet_preprocessed/
+nnUNet_results/
+
+# outputファイルを除外
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff

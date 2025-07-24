@@ -42,6 +42,8 @@ cd U-KAN
 conda create -n ukan python=3.10
 conda activate ukan
 cd Seg_UKAN && pip install -r requirements.txt
+
+pip install torch==1.13.0+cu116 torchvision==0.14.0+cu116 torchaudio==0.13.0 --extra-index-url https://download.pytorch.org/whl/cu116
 ```
 
 **Tips A**: 本フレームワークは `pytorch=1.13.0` と `CUDA 11.6` でテストしています。他バージョンでも動作する可能性はありますが保証はしません。
@@ -100,6 +102,8 @@ cd Seg_UKAN
 python val.py --name ${dataset}_UKAN --output_dir [YOUR_OUTPUT_DIR]
 ```
 
+評価時には `best_model.pth` ファイル（最良IoUでのモデル）が自動的に読み込まれます。
+
 ## ⏳ セグメンテーション U-KAN の学習
 
 単一の GPU で簡単に学習することができます。
@@ -107,14 +111,14 @@ python val.py --name ${dataset}_UKAN --output_dir [YOUR_OUTPUT_DIR]
 
 ```bash
 cd Seg_UKAN
-python train.py --arch UKAN --dataset {dataset} --input_w {input_size} --input_h {input_size} --name {dataset}_UKAN --data_dir [YOUR_DATA_DIR]
+python3 train.py --arch UKAN --dataset {dataset} --input_w {input_size} --input_h {input_size} --name {dataset}_UKAN --data_dir [YOUR_DATA_DIR]
 ```
 
 例: BUSI データセットを 256×256 の解像度で単一 GPU で学習する場合（inputs ディレクトリ内のデータを使用）:
 
 ```bash
 cd Seg_UKAN
-python train.py --arch UKAN --dataset busi --input_w 256 --input_h 256 --name busi_UKAN --data_dir ./inputs
+python3 train.py --arch UKAN --dataset busi --input_w 256 --input_h 256 --name busi_UKAN --data_dir ./inputs
 ```
 
 詳細については Seg_UKAN/scripts.sh を参照してください。

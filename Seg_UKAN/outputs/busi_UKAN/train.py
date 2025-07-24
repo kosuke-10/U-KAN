@@ -38,143 +38,10 @@ import subprocess
 
 from pdb import set_trace as st
 
-import matplotlib.pyplot as plt
-import seaborn as sns
-plt.style.use('seaborn-v0_8') 
 
 ARCH_NAMES = ['UKAN']
 LOSS_NAMES = losses.__all__
 LOSS_NAMES.append('BCEWithLogitsLoss')
-
-
-
-def plot_progress_realtime(log, output_dir, exp_name, epoch, best_iou, best_dice):
-    """リアルタイムで学習進行を可視化"""
-    if len(log['epoch']) == 0:
-        return
-        
-    # 5エポックごとまたは最初の10エポック、または最良モデル保存時に生成
-    if epoch % 5 == 0 or epoch < 10 or len(log['epoch']) == 1:
-        df = pd.DataFrame(log)
-        
-        plt.figure(figsize=(16, 10))
-        
-        # 2x3のサブプロット作成
-        plt.subplot(2, 3, 1)
-        plt.plot(df['epoch'], df['loss'], 'b-', linewidth=2, label='Training Loss')
-        plt.plot(df['epoch'], df['val_loss'], 'r-', linewidth=2, label='Validation Loss')
-        plt.xlabel('Epoch')
-        plt.ylabel('Loss')
-        plt.title('Loss Curves')
-        plt.legend()
-        plt.grid(True, alpha=0.3)
-        
-        plt.subplot(2, 3, 2)
-        plt.plot(df['epoch'], df['iou'], 'b-', linewidth=2, label='Training IoU')
-        plt.plot(df['epoch'], df['val_iou'], 'r-', linewidth=2, label='Validation IoU')
-        
-        # 最良IoUにマーカー追加
-        if len(df) > 0:
-            best_epoch_idx = df['val_iou'].idxmax()
-            best_epoch_num = df.loc[best_epoch_idx, 'epoch']
-            best_iou_val = df.loc[best_epoch_idx, 'val_iou']
-            plt.scatter([best_epoch_num], [best_iou_val], color='gold', s=100, marker='*', 
-                       label=f'Best: {best_iou_val:.4f}', zorder=5)
-        
-        plt.xlabel('Epoch')
-        plt.ylabel('IoU')
-        plt.title(f'IoU Curves (Current: {df["val_iou"].iloc[-1]:.4f})')
-        plt.legend()
-        plt.grid(True, alpha=0.3)
-        
-        plt.subplot(2, 3, 3)
-        plt.plot(df['epoch'], df['val_dice'], 'g-', linewidth=2, label='Validation Dice')
-        
-        # 5エポック以上ある場合は移動平均も表示
-        if len(df) >= 5:
-            smooth_dice = df['val_dice'].rolling(window=5, min_periods=1).mean()
-            plt.plot(df['epoch'], smooth_dice, 'darkgreen', linewidth=3, alpha=0.8, 
-                    label='5-epoch Moving Avg')
-        
-        plt.xlabel('Epoch')
-        plt.ylabel('Dice Score')
-        plt.title(f'Dice Score (Current: {df["val_dice"].iloc[-1]:.4f})')
-        plt.legend()
-        plt.grid(True, alpha=0.3)
-        
-        plt.subplot(2, 3, 4)
-        plt.plot(df['epoch'], df['lr'], 'purple', linewidth=2)
-        plt.xlabel('Epoch')
-        plt.ylabel('Learning Rate')
-        plt.title('Learning Rate Schedule')
-        plt.yscale('log')
-        plt.grid(True, alpha=0.3)
-        
-        # 学習進行状況
-        plt.subplot(2, 3, 5)
-        progress_pct = (epoch + 1) / 400 * 100
-        remaining_epochs = 400 - (epoch + 1)
-        
-        # プログレスバー風の表示
-        completed = int(progress_pct / 2)  # 50文字のバーにスケール
-        remaining = 50 - completed
-        progress_bar = '█' * completed + '░' * remaining
-        
-        plt.text(0.1, 0.8, f'Progress: {progress_pct:.1f}%', fontsize=14, fontweight='bold')
-        plt.text(0.1, 0.6, f'Epoch: {epoch + 1}/400', fontsize=12)
-        plt.text(0.1, 0.4, f'Remaining: {remaining_epochs} epochs', fontsize=12)
-        plt.text(0.1, 0.2, progress_bar, fontsize=8, fontfamily='monospace')
-        
-        plt.xlim(0, 1)
-        plt.ylim(0, 1)
-        plt.axis('off')
-        plt.title('Training Progress')
-        
-        # 統計サマリー
-        plt.subplot(2, 3, 6)
-        current_loss = df['val_loss'].iloc[-1]
-        current_iou = df['val_iou'].iloc[-1]
-        current_dice = df['val_dice'].iloc[-1]
-        
-        # README.mdの目標値との比較
-        target_iou = 0.6526
-        target_dice = 0.7875
-        
-        iou_progress = (current_iou / target_iou) * 100 if target_iou > 0 else 0
-        dice_progress = (current_dice / target_dice) * 100 if target_dice > 0 else 0
-        
-        stats_text = f"""Current Performance:
-        
-IoU: {current_iou:.4f} (Target: {target_iou:.4f})
-Progress: {iou_progress:.1f}%
-
-Dice: {current_dice:.4f} (Target: {target_dice:.4f})
-Progress: {dice_progress:.1f}%
-
-Best IoU: {best_iou:.4f}
-Best Dice: {best_dice:.4f}
-
-Val Loss: {current_loss:.4f}"""
-        
-        plt.text(0.05, 0.95, stats_text, fontsize=10, fontfamily='monospace',
-                verticalalignment='top', bbox=dict(boxstyle="round,pad=0.5", 
-                facecolor="lightblue", alpha=0.8))
-        plt.xlim(0, 1)
-        plt.ylim(0, 1)
-        plt.axis('off')
-        plt.title('Performance Summary')
-        
-        # 全体のタイトル
-        plt.suptitle(f'🚀 U-KAN Training Progress: {exp_name} (Epoch {epoch + 1})', 
-                    fontsize=16, fontweight='bold')
-        
-        plt.tight_layout()
-        plt.savefig(f'{output_dir}/{exp_name}/progress.png', dpi=200, bbox_inches='tight')
-        plt.close()  # メモリリークを防ぐ
-        
-        # 簡潔なログ出力
-        if epoch % 10 == 0 or epoch < 5:
-            print(f"📊 Progress visualization updated: {output_dir}/{exp_name}/progress.png")
 
 
 def list_type(s):
@@ -552,9 +419,6 @@ def main():
 
         pd.DataFrame(log).to_csv(f'{output_dir}/{exp_name}/log.csv', index=False)
 
-        # 🎨 リアルタイム可視化を追加（ここに挿入！）
-        plot_progress_realtime(log, output_dir, exp_name, epoch, best_iou, best_dice)
-
         my_writer.add_scalar('train/loss', train_log['loss'], global_step=epoch)
         my_writer.add_scalar('train/iou', train_log['iou'], global_step=epoch)
         my_writer.add_scalar('val/loss', val_log['loss'], global_step=epoch)
@@ -567,31 +431,20 @@ def main():
         trigger += 1
 
         if val_log['iou'] > best_iou:
-            torch.save(model.state_dict(), f'{output_dir}/{exp_name}/best_model.pth')  # best.pthに変更
+            torch.save(model.state_dict(), f'{output_dir}/{exp_name}/model.pth')
             best_iou = val_log['iou']
             best_dice = val_log['dice']
-            print(f"=> saved best model (epoch {epoch}, IoU: {best_iou:.4f})")
+            print("=> saved best model")
+            print('IoU: %.4f' % best_iou)
+            print('Dice: %.4f' % best_dice)
             trigger = 0
-            
-            # 🏆 最良モデル保存時は必ず可視化更新
-            plot_progress_realtime(log, output_dir, exp_name, epoch, best_iou, best_dice)
-
-        # 最終エポックでの保存を追加
-        if epoch == config['epochs'] - 1:
-            torch.save(model.state_dict(), f'{output_dir}/{exp_name}/last_model.pth')  # last_model.pthに変更
-            print("=> saved last model")
-
-            # 🏁 最終エポックでも可視化更新
-            plot_progress_realtime(log, output_dir, exp_name, epoch, best_iou, best_dice)
 
         # early stopping
         if config['early_stopping'] >= 0 and trigger >= config['early_stopping']:
             print("=> early stopping")
-            # Early stopping時も可視化更新
-            plot_progress_realtime(log, output_dir, exp_name, epoch, best_iou, best_dice)
             break
 
         torch.cuda.empty_cache()
-            
+    
 if __name__ == '__main__':
     main()

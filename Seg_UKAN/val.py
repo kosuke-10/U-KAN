@@ -81,7 +81,7 @@ def main():
 
     _, val_img_ids = train_test_split(img_ids, test_size=0.2, random_state=config['dataseed'])
 
-    ckpt = torch.load(f'{args.output_dir}/{args.name}/model.pth')
+    ckpt = torch.load(f'{args.output_dir}/{args.name}/best_model.pth')
 
     try:        
         model.load_state_dict(ckpt)
